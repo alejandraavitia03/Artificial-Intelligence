@@ -114,7 +114,7 @@ def CalculateTileDiffCost(state) ->int:
     total_tiles = 0
     for x in range(len(state)):
         for y in range(len(state[x])):
-            position = [x][y]
+            position = [x, y]
             value = state[x][y]
             if position == final_state[value]:
                 continue
@@ -166,7 +166,8 @@ def aStar(grid, h):
     initial_state = State(grid, CalculateCost(h, grid),0)
     print("Expanding:\n")
     print(initial_state.graph())
-    
+
+    tempChild = -1
     goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
     states = [initial_state]
     hp.heapify(states)
@@ -185,6 +186,8 @@ def aStar(grid, h):
         total_moves += 1
         seen.add(tuple(current.flatten()))
         children = GetPossibleMoves(current,h)
+        if len(children) > tempChild:
+            tempChild = len(children)
         tmp = []
         for child_state in children:
             if set(child_state.flatten()) in seen: continue
@@ -196,6 +199,9 @@ def aStar(grid, h):
     print("\tGOAL!\n")
     print(current.graph())
     print("-------------------------------------------")
+    print("To solve this problme the search algorithm expanded a total of " + str(len(seen)) + " nodes.")
+    print("The maximum number of nodes in the queue at any one time: " + str(tempChild))
+    print("The depth of the goal node was: " + str(total_moves))
     if current.flatten() != goal_state:
         print("Not possible to solve")
 
